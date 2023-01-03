@@ -191,6 +191,10 @@ int main(){
         }
         for(int i = 0;i<len;i++){
             Node * head1 = get(head,i);
+            if(head1->pos.x > WIDTH-1 || head1->pos.x < 0 || 
+                    head1->pos.y > HEIGHT-1 || head1->pos.y < 0){
+                return 0;
+            }
             for(int j = 0;j<len;j++){
                 Node * head2 = get(head,j);
                 if(head1 != head2){
