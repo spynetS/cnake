@@ -66,14 +66,26 @@ Node *get(Node* head, int index){
     }
     return NULL;
 }
-int renderTimes = 0;
 
+void spaces(int spaces){
+    for(int i = 0; i < spaces; i++){
+        printf(" ");
+    }
+}
+void chars(int spaces, char *c){
+    for(int i = 0; i < spaces; i++){
+        printf(c);
+    }
+}
 void render(){
     system("clear");
+    spaces(WIDTH-5);
+    printf("Score:%d\n",len-3);
     int board[WIDTH*HEIGHT];
     for(int j = 0;j<HEIGHT*WIDTH;j++){
         board[j] = 0;
     }
+
     int y = 0;
     int x = 0;
     for(int j = 0;j<HEIGHT*WIDTH;j++){
@@ -96,6 +108,8 @@ void render(){
     }
     
     int row = 0;
+    chars(WIDTH*2+2,"▄");
+    printf("\n█");
     for(int j = 0;j<HEIGHT*WIDTH;j++){
         if(board[j] == 1){
             printf("\033[0;32m██");
@@ -104,20 +118,20 @@ void render(){
             printf("\033[33;1m██");
         }
         if(board[j] == 0){
-            printf(". ");
+            printf("· ");
         }
         if(board[j] == 2){
             printf("\033[31;1m@ ");
         }
         printf("\033[0m");
         if(row == WIDTH-1){
-             printf("\n");
+             printf("█\n█");
              row=-1;
         }
         row ++;
     }
-    renderTimes++;
-
+    chars(WIDTH*2,"▄");
+    printf("█\n");
 }
 
 int main(){
