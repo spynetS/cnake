@@ -139,14 +139,19 @@ int main(){
     add(head, 1,1);
     add(head, 2,1);
     add(head, 3,1);
+    add(head, 4,1);
+    add(head, 5,1);
+    add(head, 6,1);
+    add(head, 7,1);
+    add(head, 8,1);
+    add(head, 9,1);
     
     apple.x = 10;
     apple.y = 5;
-
+    int time = 100;
     Vector direction;
     direction.x = 0;
     direction.y = 1;
-    
 
     while(1){
 
@@ -169,42 +174,47 @@ int main(){
                 direction.y = 1;
             }
         }
-       //snake hit apple 
-        if(head->parent != NULL && head->parent->pos.x == apple.x && head->parent->pos.y == apple.y){
-            move(head, direction);
-            srand(time(0));
-            int x = (rand() % (WIDTH - 1 + 1)) + 0;
-            int y = (rand() % (HEIGHT - 1 + 1)) + 0;
-            apple.x = x;
-            apple.y = y;
+        time--;
+        if(time == 0){
+            time=100;
+           //snake hit apple 
+            if(head->parent != NULL && head->parent->pos.x == apple.x && head->parent->pos.y == apple.y){
+                move(head, direction);
+                srand(time(0));
+                int x = (rand() % (WIDTH - 1 + 1)) + 0;
+                int y = (rand() % (HEIGHT - 1 + 1)) + 0;
+                apple.x = x;
+                apple.y = y;
 
-        }else{
-            Node *new = move(head, direction);
-            len--;
-            //remove old
-            if(head->next->next != NULL){
-                Node *old = head->next;
-                head->next = head->next->next;
-                head->parent = new;
-                free(old);
+            }else{
+                Node *new = move(head, direction);
+                len--;
+                //remove old
+                if(head->next->next != NULL){
+                    Node *old = head->next;
+                    head->next = head->next->next;
+                    head->parent = new;
+                    free(old);
+                }
             }
-        }
-        for(int i = 0;i<len;i++){
-            Node * head1 = get(head,i);
-            if(head1->pos.x > WIDTH-1 || head1->pos.x < 0 || 
-                    head1->pos.y > HEIGHT-1 || head1->pos.y < 0){
-                return 0;
-            }
-            for(int j = 0;j<len;j++){
-                Node * head2 = get(head,j);
-                if(head1 != head2){
-                    if(head1->pos.x == head2->pos.x && head1->pos.y == head2->pos.y){
-                        return 0;
+            for(int i = 0;i<len;i++){
+                Node * head1 = get(head,i);
+                if(head1->pos.x > WIDTH-1 || head1->pos.x < 0 || 
+                        head1->pos.y > HEIGHT-1 || head1->pos.y < 0){
+                    return 0;
+                }
+                for(int j = 0;j<len;j++){
+                    Node * head2 = get(head,j);
+                    if(head1 != head2){
+                        if(head1->pos.x == head2->pos.x && head1->pos.y == head2->pos.y){
+                            return 0;
+                        }
                     }
                 }
             }
+
         }
-        msleep(100);
+        msleep(10);
         render();
     }
 
