@@ -12,7 +12,11 @@ Git clone and then run ./run.sh. That simple script will
 just build it and output to a.out
 
 ### Aur
-
+There is a package on aur [here][https://aur.archlinux.org/packages/cnake-git]
+to install
+```
+yay -S cnake-git
+```
 
 
 

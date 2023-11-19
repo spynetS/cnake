@@ -85,8 +85,7 @@ void moveSnake(Part* head, int nx, int ny,int *add){
   addSnake(head,nx,ny);
 }
 
-void setDirection(int *xd, int *yd){
-    char input = getKeyPressed();
+void setDirection(char input,int *xd, int *yd){
     if(input == 'd' && *xd != -1){
       *xd = 1;
       *yd = 0;
@@ -114,10 +113,11 @@ void moveApple(Part* apple, int xmax,int ymax){
   apple->y=y;
 }
 
-void exitGame(Part* snakeHead, Part* apple, Canvas* canvas){
+void exitGame(Canvas* canvas,Part* snakeHead, Part* apple, Part* apple2){
   freeSnake(snakeHead);
   free(apple);
   freeCanvas(canvas);
+  exit(0);
 }
 
 int checkCollision(Part* snake){
@@ -201,7 +201,11 @@ int main(){
 
   while(1){
 
-    setDirection(&xd,&yd);
+    char input = getKeyPressed();
+
+    if(input == 'q') exitGame(canvas,head,apple,apple1);
+
+    setDirection(input,&xd,&yd);
     x += xd;
     y += yd;
 
@@ -214,7 +218,7 @@ int main(){
     }
 
     add = appleCollide(head,apple);
-    add = appleCollide(head,apple1);
+    add = add ? 1 : appleCollide(head,apple1); // if add is 1 dont check appl1
 
     char scoreText[20];
     sprintf(scoreText,"Score: %d",score);
@@ -234,7 +238,7 @@ int main(){
     msleep(100);
     clearPixels(canvas);
   }
-  exitGame(head,apple,canvas);
+  exitGame(canvas,head,apple,apple1);
 
 
   return 0;
