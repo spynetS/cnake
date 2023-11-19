@@ -13,9 +13,13 @@ just build it and output to a.out
 
 ### Aur
 There is a package on aur [here](https://aur.archlinux.org/packages/cnake-git)
-to install
+>to install
 ```
 yay -S cnake-git
+```
+> then run
+```
+cnake
 ```
 
 
