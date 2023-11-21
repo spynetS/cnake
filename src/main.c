@@ -106,8 +106,8 @@ void setDirection(char input,int *xd, int *yd){
 }
 
 void moveApple(Part* apple, int xmax,int ymax){
-  int x = rand() % xmax;
-  int y = rand() % ymax;
+  int x = rand() % xmax-1;
+  int y = rand() % ymax-1;
 
   apple->x=x;
   apple->y=y;
