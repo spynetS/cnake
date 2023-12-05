@@ -4,8 +4,8 @@
 #include <time.h>
 
 Canvas* canvas;
-int width = 30;
-int height = 30;
+int width = 20;
+int height = 20;
 int score = 0;
 
 typedef struct part{
@@ -106,8 +106,9 @@ void setDirection(char input,int *xd, int *yd){
 }
 
 void moveApple(Part* apple, int xmax,int ymax){
-  int x = rand() % xmax-1;
-  int y = rand() % ymax-1;
+  srand(time(NULL));   // Initialization, should only be called once.
+  int x = rand() % xmax;
+  int y = rand() % ymax;
 
   apple->x=x;
   apple->y=y;
@@ -173,9 +174,18 @@ void drawApple(Canvas* canvas, Part* apple){
     setPixel(canvas,apple->x,apple->y,appleChar,RED,BG_GREEN);
 }
 
-int main(){
-  srand(time(NULL));   // Initialization, should only be called once.
+void set_grass(){
+  srand(100);
+  for(int i = 0; i < width*height; i ++){
+    int ran = rand()%5;
+    if(ran == 1){
+      setPixel(canvas, i/width, i%height, " 󱔐",BLACK,BG_GREEN);
+    }
+  }
+}
 
+
+int main(){
 
   canvas = newCanvas(width,height,"  ",WHITE,BG_GREEN);
   canvas->x = (termWidth()/2)-canvas->width;
@@ -237,6 +247,7 @@ int main(){
 
     msleep(100);
     clearPixels(canvas);
+    set_grass();
   }
   exitGame(canvas,head,apple,apple1);
 
