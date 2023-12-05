@@ -158,10 +158,12 @@ int appleCollide(Part* head, Part* apple){
       score++;
       moveApple(apple,canvas->width,canvas->height);
       int max = 10000;
-      while(max > 0 && checkCollisionApple(head,apple->x,apple->y)){
+      //check so the apple does not move under the snake
+      while(max > 0 && !checkCollisionApple(head,apple->x,apple->y)){
         moveApple(apple,canvas->width,canvas->height);
         max --;
       }
+
       if(max < 1){
         // everyting is taken up?
       }
