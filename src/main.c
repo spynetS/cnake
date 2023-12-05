@@ -209,26 +209,29 @@ int main(){
   int xd=1,yd=0;
   int add = 0; // if true when the snake moves it will not remove the last part
 
+  int tick = 0;
   while(1){
 
     char input = getKeyPressed();
 
-    if(input == 'q') exitGame(canvas,head,apple,apple1);
+   if(input == 'q') exitGame(canvas,head,apple,apple1);
 
     setDirection(input,&xd,&yd);
-    x += xd;
-    y += yd;
+    if(tick % 2==0){
+      x += xd;
+      y += yd;
 
-    moveSnake(head,x,y,&add);
+      moveSnake(head,x,y,&add);
+      //snake hits dies
+      if(checkCollision(head)) {
+        break;
+      }
 
+      add = appleCollide(head,apple);
+      add = add ? 1 : appleCollide(head,apple1); // if add is 1 dont check appl1
 
-    //snake hits dies
-    if(checkCollision(head)) {
-      break;
     }
-
-    add = appleCollide(head,apple);
-    add = add ? 1 : appleCollide(head,apple1); // if add is 1 dont check appl1
+    tick++;
 
     char scoreText[20];
     sprintf(scoreText,"Score: %d",score);
@@ -245,7 +248,7 @@ int main(){
     draw(scoreCanvas);
     drawBorder(scoreCanvas,0);
 
-    msleep(100);
+    msleep(50);
     clearPixels(canvas);
     set_grass();
   }
