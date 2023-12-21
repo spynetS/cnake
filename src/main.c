@@ -23,6 +23,7 @@ void addSnake(Part* head,int nx, int ny);
 void popPart(Part* head);
 void moveSnake(Part* head, int nx, int ny,int *add);
 void freeSnake(Part* head);
+void drawApple(Canvas* canvas, Part* apple);
 
 void freeSnake(Part* head){
   while(head->next != NULL){
@@ -51,7 +52,7 @@ void drawSnake(Canvas* canvas, Part* head){
   Part* next = head->next;
   int i = 0;
   while(next != NULL){
-      setPixel(canvas,next->x,next->y,tailChar,BLACK,BG_BLACK);
+      setPixel(canvas,next->x,next->y,tailChar,BLACK,BG_GREEN);
     next = next->next;
     i++;
   }
@@ -145,27 +146,39 @@ int checkCollision(Part* snake){
 int checkCollisionApple(Part* snake,int x, int y){
   Part* next = snake->next;
   while(next != NULL){
-    if( next->x==x && next->y == y)
-        return 1;
+    if( next->x==x && next->y == y){
+      return 1;
+    }
     next = next->next;
   }
   return 0;
 }
 
-int appleCollide(Part* head, Part* apple){
+int appleCollide(Part* head, Part* apple, Part* apple2){
     //check if snake eats apple
     if(getTop(head)->x == apple->x && getTop(head)->y == apple->y){
       score++;
       moveApple(apple,canvas->width,canvas->height);
-      int max = 10000;
+      int max = 10000000;
       //check so the apple does not move under the snake
-      while(max > 0 && !checkCollisionApple(head,apple->x,apple->y)){
-        moveApple(apple,canvas->width,canvas->height);
-        max --;
-      }
-
-      if(max < 1){
-        // everyting is taken up?
+      while(max > 0){
+        if( checkCollisionApple(head,apple->x,apple->y) ||
+          (apple->x == apple2->x && apple->y == apple2->y) ){
+          if(apple->x > canvas->width/2){
+            apple->x--;
+          }else {
+            apple->x++;
+          }
+          if(apple->y > canvas->height/2){
+            apple->y--;
+          }else {
+            apple->y++;
+          }
+        }
+        else{
+          break;
+        }
+        max--;
       }
       return 1;
     }
@@ -188,7 +201,7 @@ void set_grass(){
 
 
 int main(){
-
+  
   canvas = newCanvas(width,height,"  ",WHITE,BG_GREEN);
   canvas->x = (termWidth()/2)-canvas->width;
   canvas->y = 7;
@@ -202,6 +215,8 @@ int main(){
   Part *head = newPart(4,2);
   addSnake(head,canvas->width/2,canvas->height/2);
   addSnake(head,canvas->width/2+1,canvas->height/2);
+  addSnake(head,canvas->width/2+2,canvas->height/2);
+  addSnake(head,canvas->width/2+3,canvas->height/2);
 
 
   Part *apple = newPart(5,5);
@@ -217,9 +232,10 @@ int main(){
     char input = getKeyPressed();
 
    if(input == 'q') exitGame(canvas,head,apple,apple1);
-
     setDirection(input,&xd,&yd);
-    if(tick % 2==0){
+
+    if(tick > 4){
+
       x += xd;
       y += yd;
 
@@ -229,9 +245,9 @@ int main(){
         break;
       }
 
-      add = appleCollide(head,apple);
-      add = add ? 1 : appleCollide(head,apple1); // if add is 1 dont check appl1
-
+      add = appleCollide(head,apple,apple1);
+      add = add ? 1 : appleCollide(head,apple1,apple); // if add is 1 dont check appl1
+      tick = 0;
     }
     tick++;
 
@@ -250,7 +266,7 @@ int main(){
     draw(scoreCanvas);
     drawBorder(scoreCanvas,0);
 
-    msleep(50);
+    msleep(20);
     clearPixels(canvas);
     set_grass();
   }
